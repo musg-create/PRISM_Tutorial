@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prism-spatial"
+version = "0.1.0"
+description = "PRISM for incomplete spatial multi-omics registration"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Shiguan Mu", email = "csshiguan_mu@mail.scut.edu.cn" }]
+dependencies = [
+    "anndata>=0.10,<0.12",
+    "matplotlib>=3.8,<3.11",
+    "numpy>=1.26,<2.0",
+    "pandas>=2.1,<2.4",
+    "scanpy>=1.10,<1.12",
+    "scikit-learn>=1.6,<1.7",
+    "scipy>=1.11,<1.15",
+    "seaborn>=0.13,<0.14",
+    "torch>=2.4,<2.5",
+    "torch-geometric>=2.6,<2.8",
+    "torch-scatter>=2.1,<2.2",
+    "torch-sparse>=0.6.18,<0.6.19",
+    "tqdm>=4.66,<5",
+]
+
+[project.optional-dependencies]
+tutorials = [
+    "ipykernel>=6,<8",
+    "jupyterlab>=4,<5",
+    "opencv-python>=4.8,<5",
+    "Pillow>=10,<13",
+    "rpy2>=3.5,<3.6",
+]
+
+[tool.setuptools]
+packages = ["PRISM"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+PRISM = ["*.R"]

@@ -1,0 +1,21 @@
+# Local datasets, generated models and tutorial outputs are distributed separately.
+/Datasets/*
+!/Datasets/README.md
+/Results/*
+!/Results/README.md
+
+# Python and Jupyter artifacts.
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Local environments and editor settings.
+.venv/
+env/
+.env
+.vscode/
+.idea/
