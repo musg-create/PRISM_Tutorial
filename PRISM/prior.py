@@ -210,8 +210,10 @@ def compute_similarity_prior(
     of AOT environment neighbors retained for each reference cell.
     Set ``aot_chunk_size`` only for datasets that need memory-bounded AOT
     construction; otherwise AOT is computed in one operation. Set
-    ``evaluate_prior=False`` when the returned prior metrics are not needed,
-    avoiding an unnecessary full-dataset metric pass.
+    Set ``show_prior_metrics=False`` to skip prior-metric computation entirely.
+    ``evaluate_prior=False`` also skips this diagnostic for backward
+    compatibility. ``compute_structure_metrics`` is applied only when prior
+    metrics are requested.
     """
     if os.path.exists(prior_path):
         distance_matrix = sp.load_npz(prior_path).tocsr()
@@ -267,7 +269,7 @@ def compute_similarity_prior(
         raise ValueError(
             f"Prior shape {distance_matrix.shape} does not match {expected_shape}."
         )
-    if not evaluate_prior:
+    if not evaluate_prior or not show_prior_metrics:
         return distance_matrix, {}
     from .validation import compute_metrics_each_pair
     rmse, pcc, spcc, cmd, ssim, _ = compute_metrics_each_pair(
