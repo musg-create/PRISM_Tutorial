@@ -1,17 +1,21 @@
-# The conda environment in environment.yml is the canonical tutorial setup.
-# Use this file only after installing a PyTorch/PyG combination compatible with your platform.
-anndata==0.10.9
-matplotlib==3.10.8
-numpy==1.26.4
-pandas==2.2.2
-scanpy==1.10.2
-scikit-learn==1.6.1
-scipy==1.14.1
-seaborn==0.13.2
-torch==2.4.0
-torch-geometric==2.7.0
-torch-scatter==2.1.2
-torch-sparse==0.6.18
-tqdm==4.67.3
-opencv-python>=4.8,<5
-Pillow>=10,<13
+# General Python dependencies for an existing Python 3.10 environment.
+# Install the PyTorch/PyG stack separately so that it matches the local CPU or
+# CUDA configuration; see README.md. The recommended reproducible route is
+# `mamba env create -f environment.yml`.
+anndata>=0.10,<0.12
+h5py>=3.10,<4
+matplotlib>=3.8,<3.11
+numpy>=1.26,<2.0
+pandas>=2.1,<2.4
+scanpy>=1.10,<1.12
+scikit-learn>=1.6,<1.7
+scikit-misc>=0.3,<0.6
+scipy>=1.11,<1.15
+seaborn>=0.13,<0.14
+tqdm>=4.66,<5
+ipykernel>=6,<8
+jupyterlab>=4,<5
+
+# Required for the mclust-based spatial-domain step. An R installation and the
+# R package `mclust` must already be available when using pip alone.
+rpy2>=3.5,<3.6
