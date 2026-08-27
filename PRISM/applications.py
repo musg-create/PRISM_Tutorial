@@ -742,8 +742,9 @@ def plot_pd_human_volcano(
     padj_cutoff=0.05,
     visual_logfc_cutoff=1.0,
     visual_neglog10_fdr_cutoff=5.0,
+    label_genes=None,
 ):
-    """Plot the Dopamine-response volcano chart with the tutorial display settings."""
+    """Plot the Dopamine-response volcano chart with optional user-selected gene labels."""
     y_breaks = np.array([0, 5, 10, 50, 150, 250, 350], dtype=float)
     y_positions = np.arange(len(y_breaks), dtype=float)
     y_cap = y_breaks[-1]
@@ -822,23 +823,21 @@ def plot_pd_human_volcano(
     ax.axvline(visual_logfc_cutoff, color="#8A8A8A", linestyle="--", linewidth=0.7, zorder=0)
     ax.axvline(-visual_logfc_cutoff, color="#8A8A8A", linestyle="--", linewidth=0.7, zorder=0)
     ax.axhline(visual_y_cutoff_plot, color="#8A8A8A", linestyle="--", linewidth=0.7, zorder=0)
-    label_order = ["NCDN", "SNAP25", "SCG2", "MAG", "MBP", "PLP1"]
-    label_categories = {
-        "NCDN": "Dopamine response enriched",
-        "SNAP25": "Dopamine response enriched",
-        "SCG2": "Dopamine response enriched",
-        "MAG": "Dopamine silent enriched",
-        "MBP": "Dopamine silent enriched",
-        "PLP1": "Dopamine silent enriched",
+    category_by_group = {
+        "Dopamine_response": "Dopamine response enriched",
+        "Dopamine_silent": "Dopamine silent enriched",
     }
-    label_offsets = {
-        "NCDN": (0.06, 0.10),
-        "SNAP25": (0.06, 0.10),
-        "SCG2": (0.06, 0.10),
-        "MAG": (-0.06, -0.40),
-        "MBP": (-0.06, -0.16),
-        "PLP1": (-0.06, 0.08),
-    }
+    label_order = []
+    label_categories = {}
+    for group_name, genes in (label_genes or {}).items():
+        if group_name not in category_by_group:
+            raise ValueError(
+                f"Unknown label group {group_name!r}; expected one of {tuple(category_by_group)}."
+            )
+        for gene in genes:
+            gene_upper = str(gene).upper()
+            label_order.append(gene_upper)
+            label_categories[gene_upper] = category_by_group[group_name]
     label_df = volcano_df.assign(gene_upper=volcano_df["gene"].astype(str).str.upper())
     label_df = label_df[
         label_df["gene_upper"].isin(label_order)
@@ -847,12 +846,13 @@ def plot_pd_human_volcano(
     ].drop_duplicates("gene_upper")
     label_df["label_order"] = pd.Categorical(label_df["gene_upper"], label_order, ordered=True)
     for _, row in label_df.sort_values("label_order").iterrows():
-        x_offset, y_offset = label_offsets[row["gene_upper"]]
+        x_offset, y_offset = (0.06 if row["logFC"] >= 0 else -0.06, 0.10)
         ax.text(
             row["logFC"] + x_offset,
             min(row["y_plot"] + y_offset, y_positions[-1] - 0.18),
             row["gene_upper"],
             fontsize=8,
+            fontstyle="italic",
             color="black",
             ha="left" if row["logFC"] >= 0 else "right",
             va="bottom",
