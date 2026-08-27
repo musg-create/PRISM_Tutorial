@@ -1,39 +1,46 @@
-# PRISM
+# PRISM: Niche-informed Deciphering of Incomplete Spatial Multi-Omics Data
 
-PRISM is a PyTorch framework for spatial multi-omics with incomplete registration. It combines modality-aware spatial graphs, similarity priors and Transformer-based context integration to support two linked analyses: spatial-domain identification and missing-omics imputation.
+This repository contains the official PyTorch implementation and reproducibility tutorials for [PRISM](https://www.biorxiv.org/content/10.64898/2026.02.03.703456v1), a framework for spatial multi-omics with incomplete registration.
 
-This repository provides the implementation and dataset-specific tutorials used to reproduce the PRISM workflows. The tutorials cover simulated and real incomplete-registration settings across spatial transcriptomic, chromatin-accessibility, protein and metabolite measurements.
+PRISM combines modality-aware spatial graphs, a niche-informed similarity prior and Transformer-based context integration to support two linked analyses:
+
+- spatial-domain identification from a shared representation;
+- missing-omics imputation at target-unregistered locations.
+
+## Overview
+
+![Overview of the PRISM framework](assets/prism-overview.png)
 
 ## Installation
 
-The supplied Conda environment is CPU-first and does not pin CUDA, glibc or other machine-specific runtime packages.
+Clone the repository and create the supplied CPU-first Conda environment:
 
 ```bash
+git clone https://github.com/musg-create/PRISM_Tutorial.git
+cd PRISM_Tutorial
 mamba env create -f environment.yml
 mamba activate PRISM_Tutorial
 pip install -e . --no-deps
 python -m ipykernel install --user --name PRISM_Tutorial --display-name "PRISM_Tutorial"
 ```
 
-For GPU execution, install the PyTorch build appropriate for the local CUDA driver, then install the matching PyG extension wheels or Conda packages. Keep `torch`, `torch-geometric`, `torch-scatter` and `torch-sparse` on compatible versions. The CPU environment remains the portable reference configuration.
-
-Confirm the installation from the repository root:
+For GPU execution, install the PyTorch build appropriate for the local CUDA driver, followed by compatible PyG extension wheels or Conda packages. Confirm the installation from the repository root:
 
 ```bash
 python -c "import PRISM; print(PRISM.__version__)"
 ```
 
-Launch Jupyter from the repository root so that all tutorial paths resolve relative to `Datasets/` and `Results/`:
+Launch Jupyter from the repository root so tutorial paths resolve relative to `Datasets/` and `Results/`:
 
 ```bash
 jupyter lab
 ```
 
-## Data and outputs
+## Data preparation
 
-The repository does not redistribute third-party molecular data, processed AnnData objects or generated result files. Each tutorial identifies its original public dataset and the required local input layout; obtain the data from the cited source repository under its own access and reuse terms, then place the prepared inputs below `Datasets/`. [Datasets/README.md](Datasets/README.md) provides the source links, expected paths and workflow dependencies.
+Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Each tutorial links to its original public data source and specifies the expected local input layout. The [dataset guide](Datasets/README.md) provides source links, preparation requirements and workflow dependencies.
 
-The MAGPIE landmark coordinate pairs required by Tutorial 5.1 are included at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv`. They are PRISM-authored coordinate pairs without molecular measurements.
+Tutorial 5.1 includes PRISM-authored MAGPIE landmark coordinate pairs at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv`. These files contain coordinates only, not RNA or MSI measurements.
 
 ## Tutorials
 
@@ -47,19 +54,17 @@ The MAGPIE landmark coordinate pairs required by Tutorial 5.1 are included at `D
 | 6.1-6.2 | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain RNA and CUT&Tag sections. |
 | 7.1-7.3 | scSLAT registration, real incomplete registration and cell-type-specific simulation in COAD RNA and CODEX data. |
 
-Tutorials 5.1, 6.1 and 7.1 generate registered intermediate objects consumed by the following tutorial. The remaining tutorials can be run independently once their documented inputs are available.
+Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their subsequent analysis tutorials. The remaining tutorials can be run independently once their documented inputs are available.
 
-## Optional dependencies
+## Optional external tools
 
-The core environment deliberately excludes external registration frameworks.
-
-- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 require a separately installed scSLAT/GLUE environment. They start from source-derived AnnData inputs with precomputed `X_glue` embeddings; GLUE preparation is an external prerequisite and is not distributed or implemented in this repository. Follow the [SLAT installation guide](https://slat.readthedocs.io/) and select that kernel only for these registration notebooks.
-- **MAGPIE**: Tutorial 5.1 uses repository-supplied landmark coordinate pairs obtained with the [MAGPIE interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately. Install MAGPIE only when selecting new landmarks.
+- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 require a separately installed scSLAT/GLUE environment with source-derived inputs and precomputed `X_glue` embeddings. GLUE preparation is an external prerequisite and is not distributed in this repository. Follow the [SLAT installation guide](https://slat.readthedocs.io/).
+- **MAGPIE**: The provided Tutorial 5.1 landmarks were selected with the [MAGPIE interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). Install MAGPIE only to generate landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
 - **KEGG enrichment**: Tutorial 5.3 requires `Rscript`, `curl`, and the R packages `AnnotationDbi`, `org.Hs.eg.db` and `ggplot2`.
 
 ## Reproducibility scope
 
-Every notebook imports the installed `PRISM` package directly and uses repository-relative data and output paths. Controlled simulations are reproducible after the paired source inputs have been obtained. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented source-compatible RNA and MSI inputs; the required landmark files are included in this repository. Tutorials 5.2-5.3 use its outputs. Tutorials 6.1 and 7.1 reproduce the scSLAT registration stage after users prepare compatible GLUE embeddings in their own external environment.
+All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 reproduce scSLAT registration after compatible GLUE embeddings have been prepared externally; they are not end-to-end workflows from raw data.
 
 ## License
 
@@ -67,7 +72,7 @@ PRISM is released under the [SCUT License](LICENSE).
 
 ## Citation
 
-If you use PRISM, please cite:
+If you find this repository useful, please consider citing this paper:
 
 ```bibtex
 @article{mu2026prism,
@@ -82,4 +87,4 @@ If you use PRISM, please cite:
 
 ## Contact
 
-For questions, please contact [sg_mu543@foxmail.com](mailto:sg_mu543@foxmail.com).
+If you have questions, please contact [sg_mu543@foxmail.com](mailto:sg_mu543@foxmail.com).
