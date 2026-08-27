@@ -1,6 +1,13 @@
 # Local datasets, generated models and tutorial outputs are distributed separately.
 /Datasets/*
 !/Datasets/README.md
+!/Datasets/PD human brain/
+/Datasets/PD human brain/*
+!/Datasets/PD human brain/*/
+/Datasets/PD human brain/*/*
+!/Datasets/PD human brain/*/landmark/
+/Datasets/PD human brain/*/landmark/*
+!/Datasets/PD human brain/*/landmark/landmarks_noHE.csv
 /Results/*
 !/Results/README.md
 

@@ -31,7 +31,9 @@ jupyter lab
 
 ## Data and outputs
 
-Large inputs and generated outputs are excluded from Git. See [Datasets/README.md](Datasets/README.md) for the expected data layout and [Results/README.md](Results/README.md) for generated artifacts. A versioned Zenodo data archive, including file checksums and expected output artifacts, will be linked here before public release.
+The repository does not redistribute third-party molecular data, processed AnnData objects or generated result files. Each tutorial identifies its original public dataset and the required local input layout; obtain the data from the cited source repository under its own access and reuse terms, then place the prepared inputs below `Datasets/`. [Datasets/README.md](Datasets/README.md) provides the source links, expected paths and workflow dependencies.
+
+The MAGPIE landmark coordinate pairs required by Tutorial 5.1 are included at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv`. They are PRISM-authored coordinate pairs without molecular measurements.
 
 ## Tutorials
 
@@ -42,7 +44,7 @@ Large inputs and generated outputs are excluded from Git. See [Datasets/README.m
 | 3.1-3.2 | FOV and randomly distributed ATAC-RNA incomplete registration in embryonic mouse brain. |
 | 4 | Omics-specific domain unregistration in mouse thymus. |
 | 5.1-5.3 | SMA/MAGPIE preparation, real PD-brain RNA-MSI completion and dopamine enrichment. |
-| 6.1-6.2 | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain RNA and ATAC sections. |
+| 6.1-6.2 | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain RNA and CUT&Tag sections. |
 | 7.1-7.3 | scSLAT registration, real incomplete registration and cell-type-specific simulation in COAD RNA and CODEX data. |
 
 Tutorials 5.1, 6.1 and 7.1 generate registered intermediate objects consumed by the following tutorial. The remaining tutorials can be run independently once their documented inputs are available.
@@ -51,13 +53,13 @@ Tutorials 5.1, 6.1 and 7.1 generate registered intermediate objects consumed by 
 
 The core environment deliberately excludes external registration frameworks.
 
-- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 require a separately installed scSLAT/GLUE environment. Follow the [SLAT installation guide](https://slat.readthedocs.io/) and select that kernel only for these registration notebooks.
-- **MAGPIE**: Tutorial 5.1 uses MAGPIE-derived landmark inputs. Install MAGPIE separately only when regenerating landmarks; the supplied prepared inputs do not require the MAGPIE package itself.
+- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 require a separately installed scSLAT/GLUE environment. They start from source-derived AnnData inputs with precomputed `X_glue` embeddings; GLUE preparation is an external prerequisite and is not distributed or implemented in this repository. Follow the [SLAT installation guide](https://slat.readthedocs.io/) and select that kernel only for these registration notebooks.
+- **MAGPIE**: Tutorial 5.1 uses repository-supplied landmark coordinate pairs obtained with the [MAGPIE interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately. Install MAGPIE only when selecting new landmarks.
 - **KEGG enrichment**: Tutorial 5.3 requires `Rscript`, `curl`, and the R packages `AnnotationDbi`, `org.Hs.eg.db` and `ggplot2`.
 
 ## Reproducibility scope
 
-Every notebook imports the installed `PRISM` package directly and uses repository-relative data and output paths. The release will pair this repository with a versioned data archive containing the large inputs, derived registration objects and selected expected outputs needed for end-to-end verification.
+Every notebook imports the installed `PRISM` package directly and uses repository-relative data and output paths. Controlled simulations are reproducible after the paired source inputs have been obtained. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented source-compatible RNA and MSI inputs; the required landmark files are included in this repository. Tutorials 5.2-5.3 use its outputs. Tutorials 6.1 and 7.1 reproduce the scSLAT registration stage after users prepare compatible GLUE embeddings in their own external environment.
 
 ## License
 
@@ -65,4 +67,19 @@ PRISM is released under the [SCUT License](LICENSE).
 
 ## Citation
 
-Citation details and the repository release DOI will be added with the first public release.
+If you use PRISM, please cite:
+
+```bibtex
+@article{mu2026prism,
+  title={PRISM: Niche-informed Deciphering of Incomplete Spatial Multi-Omics Data},
+  author={Mu, Shiguan and Wang, Zhikang and Liao, Yi and Liang, Jiaming and Zhang, Daoliang and Wang, Chuyao and Xie, Jiahui and Sheng, Xiaoqi and Zhang, Tinghe and Huang, Weitian and others},
+  journal={bioRxiv},
+  pages={2026--02},
+  year={2026},
+  publisher={Cold Spring Harbor Laboratory}
+}
+```
+
+## Contact
+
+For questions, please contact [sg_mu543@foxmail.com](mailto:sg_mu543@foxmail.com).
