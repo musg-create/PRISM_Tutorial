@@ -63,7 +63,7 @@ Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their
 
 ## Reproducibility scope
 
-All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 reproduce scSLAT registration from compatible, externally prepared GLUE inputs; they are not end-to-end workflows from raw data.
+All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 begin with compatible, externally prepared GLUE inputs and reproduce the subsequent scSLAT registration stage.
 
 ## Citation
 
