@@ -36,7 +36,7 @@ Launch Jupyter from the repository root so tutorial paths resolve relative to `D
 jupyter lab
 ```
 
-## Data preparation
+## Data availability and preparation
 
 Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Each tutorial links to its original public data source and specifies the expected local input layout. The [dataset guide](Datasets/README.md) provides source links, preparation requirements and workflow dependencies.
 
@@ -44,15 +44,17 @@ Tutorial 5.1 includes PRISM-authored MAGPIE landmark coordinate pairs at `Datase
 
 ## Tutorials
 
-| Tutorials | Setting |
+Start with Tutorial 1 for the complete simulated source-to-target workflow, then select a tutorial matching the acquisition setting and modality pair of interest.
+
+| Notebook(s) | Setting |
 | --- | --- |
-| 1 | FOV-induced RNA-ADT incomplete registration in human tonsil. |
-| 2.1-2.3 | FOV, random and asymmetric incomplete registration in human lymph node. |
-| 3.1-3.2 | FOV and randomly distributed ATAC-RNA incomplete registration in embryonic mouse brain. |
-| 4 | Omics-specific domain unregistration in mouse thymus. |
-| 5.1-5.3 | SMA/MAGPIE preparation, real PD-brain RNA-MSI completion and dopamine enrichment. |
-| 6.1-6.2 | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain RNA and CUT&Tag sections. |
-| 7.1-7.3 | scSLAT registration, real incomplete registration and cell-type-specific simulation in COAD RNA and CODEX data. |
+| [Tutorial 1](<Tutorial1: Simulation of FOV-Induced Incomplete Registration in Human Tonsil.ipynb>) | FOV-induced RNA-ADT incomplete registration in human tonsil. |
+| [2.1](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>), [2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>) and [2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>) | FOV, random and asymmetric incomplete registration in human lymph node. |
+| [3.1](<Tutorial3_1: Simulation of FOV-Induced Incomplete Registration in Embryonic Mouse Brain.ipynb>) and [3.2](<Tutorial3_2: Simulation of Random Incomplete Registration in Embryonic Mouse Brain.ipynb>) | FOV and randomly distributed ATAC-RNA incomplete registration in embryonic mouse brain. |
+| [Tutorial 4](<Tutorial4: Simulation of Omics-Specific Domain Unregistration in Mouse Thymus.ipynb>) | Omics-specific domain unregistration in mouse thymus. |
+| [5.1](<Tutorial5_1: MAGPIE Registration and Preparation of SMA.ipynb>), [5.2](<Tutorial5_2: Application of PRISM to Real Resolution-Induced Incomplete in Human PD Brain.ipynb>) and [5.3](<Tutorial5_3: Enrichment Analysis of PRISM-Imputed Dopamine-DD in Human PD Brain.ipynb>) | SMA/MAGPIE preparation, real PD-brain RNA-MSI completion and dopamine enrichment. |
+| [6.1](<Tutorial6_1: scSLAT Registration of P22 Mouse Brain Adjacent RNA and ATAC Sections.ipynb>) and [6.2](<Tutorial6_2: Application of PRISM to Real Resolution-Induced Incomplete in P22 Mouse Brain.ipynb>) | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain RNA and CUT&Tag sections. |
+| [7.1](<Tutorial7_1: scSLAT Registration of COAD RNA and CODEX Data.ipynb>), [7.2](<Tutorial7_2: Application of PRISM to Real Registration-Induced Incomplete in COAD.ipynb>) and [7.3](<Tutorial7_3: Simulation of Cell-Type-Specific Incomplete Registration in COAD.ipynb>) | scSLAT registration, real incomplete registration and cell-type-specific simulation in COAD RNA and CODEX data. |
 
 Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their subsequent analysis tutorials. The remaining tutorials can be run independently once their documented inputs are available.
 
