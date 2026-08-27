@@ -37,7 +37,7 @@ jupyter lab
 
 Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Each tutorial links to its original public data source and specifies the expected local input layout. The [dataset guide](Datasets/README.md) provides source links, preparation requirements and workflow dependencies.
 
-Tutorial 5.1 includes PRISM-authored MAGPIE landmark coordinate pairs at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv`. These files contain coordinates only, not RNA or MSI measurements.
+Tutorial 5.1 uses repository-supplied landmark coordinate pairs selected through [MAGPIE's interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). These PRISM-authored supplementary coordinates at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv` contain no RNA or MSI measurements.
 
 ## Tutorials
 
@@ -57,17 +57,13 @@ Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their
 
 ## Optional external tools
 
-- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 require a separately installed scSLAT/GLUE environment with source-derived inputs and precomputed `X_glue` embeddings. GLUE preparation is an external prerequisite and is not distributed in this repository. Follow the [SLAT installation guide](https://slat.readthedocs.io/).
-- **MAGPIE**: The provided Tutorial 5.1 landmarks were selected with the [MAGPIE interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). Install MAGPIE only to generate landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
+- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 begin after GLUE preparation. This repository does not provide a standalone GLUE workflow or precomputed `X_glue` embeddings; consult the [dataset guide](Datasets/README.md) and [SLAT installation guide](https://slat.readthedocs.io/) for the required inputs and environment.
+- **MAGPIE**: Install MAGPIE only when selecting landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
 - **KEGG enrichment**: Tutorial 5.3 requires `Rscript`, `curl`, and the R packages `AnnotationDbi`, `org.Hs.eg.db` and `ggplot2`.
 
 ## Reproducibility scope
 
-All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 reproduce scSLAT registration after compatible GLUE embeddings have been prepared externally; they are not end-to-end workflows from raw data.
-
-## License
-
-PRISM is released under the [SCUT License](LICENSE).
+All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 reproduce scSLAT registration from compatible, externally prepared GLUE inputs; they are not end-to-end workflows from raw data.
 
 ## Citation
 
