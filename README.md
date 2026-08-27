@@ -10,7 +10,7 @@ Spatial multi-omics, which integrates diverse molecular layers, has emerged as a
 
 ## Installation
 
-Clone the repository and create the supplied CPU-first Conda environment:
+Clone the repository and create the supplied Conda environment:
 
 ```bash
 git clone https://github.com/musg-create/PRISM_Tutorial.git
@@ -21,7 +21,7 @@ pip install -e . --no-deps
 python -m ipykernel install --user --name PRISM_Tutorial --display-name "PRISM_Tutorial"
 ```
 
-For GPU execution, install the PyTorch build appropriate for the local CUDA driver, followed by compatible PyG extension wheels or Conda packages. Confirm the installation from the repository root:
+GPU execution is optional. If needed, install the PyTorch build appropriate for the local CUDA driver, followed by compatible PyG extension wheels or Conda packages. Confirm the installation from the repository root:
 
 ```bash
 python -c "import PRISM; print(PRISM.__version__)"
@@ -32,6 +32,10 @@ Launch Jupyter from the repository root so tutorial paths resolve relative to `D
 ```bash
 jupyter lab
 ```
+
+## Quick start
+
+For the complete simulated source-to-target workflow, follow the [dataset guide](Datasets/README.md) to prepare the paired human tonsil inputs, then run [Tutorial 1](<Tutorial1: Simulation of FOV-Induced Incomplete Registration in Human Tonsil.ipynb>) from top to bottom. Select subsequent tutorials after preparing their documented inputs.
 
 ## Data availability and preparation
 
@@ -55,15 +59,11 @@ Start with Tutorial 1 for the complete simulated source-to-target workflow, then
 
 Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their subsequent analysis tutorials. The remaining tutorials can be run independently once their documented inputs are available.
 
-## Optional external tools
+## External prerequisites and scope
 
-- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 begin after GLUE preparation. This repository does not provide a standalone GLUE workflow or precomputed `X_glue` embeddings; consult the [dataset guide](Datasets/README.md) and [GLUE documentation](https://scglue.readthedocs.io/en/latest/) for the required inputs and embedding preparation.
-- **MAGPIE**: Install MAGPIE only when selecting landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
+- **GLUE and scSLAT**: Tutorials 6.1 and 7.1 begin with compatible, externally prepared GLUE inputs and reproduce the subsequent scSLAT registration stage. This repository does not provide a standalone GLUE workflow or precomputed `X_glue` embeddings; consult the [dataset guide](Datasets/README.md) and [GLUE documentation](https://scglue.readthedocs.io/en/latest/) for the required inputs and embedding preparation.
+- **MAGPIE**: MAGPIE is required only to select landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
 - **KEGG enrichment**: Tutorial 5.3 requires `Rscript`, `curl`, and the R packages `AnnotationDbi`, `org.Hs.eg.db` and `ggplot2`.
-
-## Reproducibility scope
-
-All notebooks import the installed `PRISM` package directly and use repository-relative paths. Controlled simulations are reproducible after obtaining the paired source inputs. Tutorial 5.1 reproduces the PRISM-specific SMA coordinate transformation and matching stage after users assemble the documented RNA and MSI inputs. Tutorials 6.1 and 7.1 begin with compatible, externally prepared GLUE inputs and reproduce the subsequent scSLAT registration stage.
 
 ## Citation
 
@@ -74,9 +74,9 @@ If you find this repository useful, please consider citing this paper:
   title={PRISM: Niche-informed Deciphering of Incomplete Spatial Multi-Omics Data},
   author={Mu, Shiguan and Wang, Zhikang and Liao, Yi and Liang, Jiaming and Zhang, Daoliang and Wang, Chuyao and Xie, Jiahui and Sheng, Xiaoqi and Zhang, Tinghe and Huang, Weitian and others},
   journal={bioRxiv},
-  pages={2026--02},
   year={2026},
-  publisher={Cold Spring Harbor Laboratory}
+  doi={10.64898/2026.02.03.703456},
+  url={https://doi.org/10.64898/2026.02.03.703456}
 }
 ```
 
