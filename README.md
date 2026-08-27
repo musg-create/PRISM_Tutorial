@@ -57,7 +57,7 @@ Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their
 
 ## Optional external tools
 
-- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 begin after GLUE preparation. This repository does not provide a standalone GLUE workflow or precomputed `X_glue` embeddings; consult the [dataset guide](Datasets/README.md) and [SLAT installation guide](https://slat.readthedocs.io/) for the required inputs and environment.
+- **scSLAT and GLUE**: Tutorials 6.1 and 7.1 begin after GLUE preparation. This repository does not provide a standalone GLUE workflow or precomputed `X_glue` embeddings; consult the [dataset guide](Datasets/README.md) and [GLUE documentation](https://scglue.readthedocs.io/en/latest/) for the required inputs and embedding preparation.
 - **MAGPIE**: Install MAGPIE only when selecting landmarks for new samples. The underlying SMA [Visium RNA](https://doi.org/10.17044/scilifelab.22778920) and [MALDI-MSI](https://doi.org/10.17044/scilifelab.22770161) measurements must be downloaded separately.
 - **KEGG enrichment**: Tutorial 5.3 requires `Rscript`, `curl`, and the R packages `AnnotationDbi`, `org.Hs.eg.db` and `ggplot2`.
 
