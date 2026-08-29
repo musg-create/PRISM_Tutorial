@@ -19,7 +19,7 @@ conda env create -f environment.yml
 conda activate PRISM_Tutorial
 ```
 
-### Reference GPU configuration
+### GPU configuration
 
 GPU execution is recommended for model training. The tutorials were executed with an NVIDIA A100 80 GB GPU, PyTorch 2.4.0 with CUDA 12.1, and PyG 2.7.0. Install this reference configuration with:
 
@@ -34,7 +34,7 @@ For another NVIDIA driver or CUDA configuration, select a compatible PyTorch bui
 
 ### CPU configuration
 
-For systems without an NVIDIA GPU, the following CPU configuration has been tested on Linux:
+For systems without an NVIDIA GPU, install the following CPU configuration:
 
 ```bash
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
