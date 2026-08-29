@@ -51,7 +51,7 @@ pip install -e . --no-deps
 
 ## Quick start
 
-For a progressive introduction to incomplete-registration settings, follow the [dataset guide](Datasets/README.md) to prepare the paired human lymph node inputs, then run the Tutorial 2 series in order. [Tutorial 2.1](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>) simulates a contiguous source-to-target field-of-view gap, [Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>) considers spatially dispersed target unregistration, and [Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>) models incomplete coverage in both RNA and ADT.
+Begin with the Tutorial 2 series using paired human lymph node RNA-ADT data. After preparing the inputs through the [dataset guide](Datasets/README.md), run the notebooks in order: [Tutorial 2.1](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>) introduces a contiguous ADT field-of-view holdout with RNA observed throughout; [Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>) uses a tissue-wide random ADT holdout; and [Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>) extends the analysis to separate RNA and ADT missing regions. Together, these tutorials cover source-to-target and bidirectionally incomplete settings.
 
 ## Data availability and preparation
 
