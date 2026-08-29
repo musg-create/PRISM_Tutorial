@@ -10,7 +10,7 @@ Spatial multi-omics, which integrates diverse molecular layers, has emerged as a
 
 ## Installation
 
-PRISM requires Python 3.10. `environment.yml` specifies the portable analysis and notebook dependencies; install PyTorch and PyTorch Geometric (PyG) separately for the local CPU or CUDA configuration.
+The supplied Conda environment uses Python 3.10 and contains the analysis and notebook dependencies. PyTorch and PyTorch Geometric (PyG) are installed separately so that the runtime can match the local hardware.
 
 ```bash
 git clone https://github.com/musg-create/PRISM_Tutorial.git
@@ -19,11 +19,9 @@ conda env create -f environment.yml
 conda activate PRISM_Tutorial
 ```
 
-`mamba env create -f environment.yml` is an equivalent faster alternative.
+### Reference GPU configuration
 
-### GPU installation (recommended)
-
-For NVIDIA GPUs compatible with CUDA 12.1, install the following runtime:
+GPU execution is recommended for model training. The tutorials were executed with an NVIDIA A100 80 GB GPU, PyTorch 2.4.0 with CUDA 12.1, and PyG 2.7.0. Install this reference configuration with:
 
 ```bash
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
@@ -32,11 +30,11 @@ pip install torch-scatter==2.1.2 torch-sparse==0.6.18 \
   --find-links https://data.pyg.org/whl/torch-2.4.0+cu121.html
 ```
 
-For a different NVIDIA driver or CUDA version, select the corresponding PyTorch command from the [official PyTorch selector](https://pytorch.org/get-started/locally/) and install the matching PyG wheels from the [PyG installation guide](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html). Replace the PyTorch build and PyG wheel URL together.
+For another NVIDIA driver or CUDA configuration, select a compatible PyTorch build through the [official PyTorch selector](https://pytorch.org/get-started/locally/) and use the corresponding wheel index in the [PyG installation guide](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html). The PyTorch build and PyG wheel index must use the same PyTorch and CUDA tags.
 
-### CPU installation
+### CPU configuration
 
-The following CPU configuration has been tested on Linux:
+For systems without an NVIDIA GPU, the following CPU configuration has been tested on Linux:
 
 ```bash
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
