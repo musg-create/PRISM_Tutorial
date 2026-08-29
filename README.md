@@ -23,7 +23,16 @@ conda activate PRISM_Tutorial
 
 ### GPU installation (recommended)
 
-Install a PyTorch build selected for the local CUDA driver using the [official PyTorch selector](https://pytorch.org/get-started/locally/), then install matching `torch-geometric`, `torch-scatter` and `torch-sparse` wheels according to the [PyG installation guide](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html).
+For NVIDIA GPUs compatible with CUDA 12.1, install the following runtime:
+
+```bash
+pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
+pip install torch-geometric==2.7.0
+pip install torch-scatter==2.1.2 torch-sparse==0.6.18 \
+  --find-links https://data.pyg.org/whl/torch-2.4.0+cu121.html
+```
+
+For a different NVIDIA driver or CUDA version, select the corresponding PyTorch command from the [official PyTorch selector](https://pytorch.org/get-started/locally/) and install the matching PyG wheels from the [PyG installation guide](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html). Replace the PyTorch build and PyG wheel URL together.
 
 ### CPU installation
 
