@@ -10,22 +10,20 @@ Spatial multi-omics, which integrates diverse molecular layers, has emerged as a
 
 ## Installation
 
-The recommended installation uses Conda or Mamba with Python 3.10. The shared environment specifies only platform-independent analysis and notebook dependencies. Install PyTorch and PyTorch Geometric (PyG) separately for the local CPU or CUDA configuration; this avoids coupling the repository to a particular driver, CUDA runtime or system library.
-
-### 1. Create the base environment
+PRISM requires Python 3.10. `environment.yml` specifies the portable analysis and notebook dependencies; install PyTorch and PyTorch Geometric (PyG) separately for the local CPU or CUDA configuration.
 
 ```bash
 git clone https://github.com/musg-create/PRISM_Tutorial.git
 cd PRISM_Tutorial
-mamba env create -f environment.yml
+conda env create -f environment.yml
 conda activate PRISM_Tutorial
 ```
 
-Replace `mamba` with `conda` if Mamba is unavailable. `environment.yml` includes `scikit-misc`, which Scanpy requires for the Seurat v3 highly variable feature selection used in the tutorials, and R/mclust for the mclust-based spatial-domain evaluation in Tutorial 1.
+`mamba env create -f environment.yml` is an equivalent faster alternative. The supplied environment includes the R/mclust dependencies used for spatial-domain evaluation.
 
-### 2. Install the PRISM runtime
+### CPU installation
 
-For the tested Linux x86_64 CPU configuration, install the matching PyTorch 2.4.0 and PyG packages:
+The following Linux x86_64 CPU configuration was used to execute Tutorial 1 end to end:
 
 ```bash
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
@@ -35,33 +33,11 @@ pip install torch-scatter==2.1.2 torch-sparse==0.6.18 \
 pip install -e . --no-deps
 ```
 
-This CPU configuration was tested by running Tutorial 1 with its documented human tonsil inputs through preprocessing, prior construction, PRISM training, spatial-domain analysis and ADT imputation. For GPU execution, first install a PyTorch build selected for the local CUDA driver from the [official PyTorch selector](https://pytorch.org/get-started/locally/). Then install `torch-geometric`, `torch-scatter` and `torch-sparse` using the matching wheel set from the [PyG installation guide](https://data.pyg.org/whl/). Do not combine the CPU commands above with a CUDA-enabled PyTorch installation.
+### GPU installation
 
-### 3. Verify and register a notebook kernel
+Install a PyTorch build selected for the local CUDA driver using the [official PyTorch selector](https://pytorch.org/get-started/locally/), then install matching `torch-geometric`, `torch-scatter` and `torch-sparse` wheels according to the [PyG installation guide](https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html). Do not combine the CPU wheels above with a CUDA-enabled PyTorch installation.
 
-```bash
-python - <<'PY'
-import PRISM
-import scanpy
-import skmisc
-import torch
-import torch_geometric
-import torch_sparse
-
-print(f"PRISM {PRISM.__version__}")
-print(f"PyTorch {torch.__version__}")
-print(f"PyG {torch_geometric.__version__}")
-PY
-python -m ipykernel install --user --name PRISM_Tutorial --display-name "PRISM_Tutorial"
-```
-
-Launch Jupyter from the repository root so tutorial paths resolve relative to `Datasets/` and `Results/`:
-
-```bash
-jupyter lab
-```
-
-For an existing Python environment, `requirements.txt` records the same general Python dependencies. It deliberately excludes PyTorch and PyG because those packages must match the local platform. A pip-only installation also requires a separately installed R runtime and the R package `mclust`; the Conda/Mamba route above provisions both.
+For an existing Python environment, install the portable Python dependencies from `requirements.txt`; PyTorch/PyG and, where needed, R with `mclust` must be installed separately.
 
 ## Quick start
 
