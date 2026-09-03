@@ -61,6 +61,12 @@ For a quick evaluation of PRISM, we recommend starting with **Tutorial 2.1: Simu
 
 **Typical runtime:** approximately 5 minutes using the reference NVIDIA A100 80 GB GPU environment.
 
+## Using PRISM on new data
+
+For a new spatial multi-omics dataset with real incomplete registration, the modalities should first be mapped to a common spatial coordinate system using an appropriate registration workflow. PRISM inputs should then be organized as modality-specific AnnData objects over the same ordered set of spatial locations, with coordinates stored in `adata.obsm["spatial"]` and modality availability defined according to the registration results. Modality-specific quality control and feature filtering can be performed on observed profiles while retaining all spatial locations and their ordering, including unregistered locations.
+
+The prepared data can then be analyzed with PRISM for spatial domain identification and missing-modality imputation. **Tutorials 5-7** provide reference workflows for resolution-induced and adjacent-section incomplete registration, including spatial registration, PRISM input preparation, model training, and downstream analysis.
+
 ## Tutorials
 
 Start with Tutorial 1 for the complete simulated source-to-target workflow, then select a tutorial matching the acquisition setting and modality pair of interest.
