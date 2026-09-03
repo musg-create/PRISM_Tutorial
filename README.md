@@ -1,10 +1,6 @@
 # PRISM: Niche-informed Deciphering of Incomplete Spatial Multi-Omics Data
 
-`Python 3.10` | `PyTorch 2.4` | [MIT License](LICENSE)
-
-Official PyTorch implementation and reproducibility tutorials for [PRISM](https://www.biorxiv.org/content/10.64898/2026.02.03.703456v1), a niche-informed framework for spatial multi-omics integration under incomplete registration.
-
-[Paper](https://www.biorxiv.org/content/10.64898/2026.02.03.703456v1) | [Dataset guide](Datasets/README.md) | [License](LICENSE)
+Official PyTorch implementation and reproducibility tutorials for PRISM, a niche-informed framework for spatial multi-omics integration under incomplete registration.
 
 ## Overview
 
