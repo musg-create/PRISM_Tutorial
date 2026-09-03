@@ -51,9 +51,19 @@ pip install -e . --no-deps
 
 ## Data availability and preparation
 
-Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Each tutorial links to its original public data source and specifies the expected local input layout. The [dataset guide](Datasets/README.md) provides source links, preparation requirements and workflow dependencies.
+Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Links to the original public data sources are provided in the corresponding tutorials and dataset documentation.
 
-Tutorial 5.1 uses repository-supplied landmark coordinate pairs selected through [MAGPIE's interactive landmark-selection tool](https://core-bioinformatics.github.io/magpie/shiny-app/shiny-app.html). These PRISM-authored supplementary coordinates at `Datasets/PD human brain/{A1,B1,C1}/landmark/landmarks_noHE.csv` contain no RNA or MSI measurements.
+## Quick start
+
+For a quick evaluation of PRISM, we recommend starting with **[Tutorial 2.1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>)**.
+
+The tutorial uses the publicly available human lymph node S1 dataset. A direct link to the required data is provided in the notebook and dataset documentation. No additional demo dataset needs to be downloaded from this repository. The same S1 dataset can also be used with **[Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>)** and **[Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>)** to evaluate PRISM under additional incomplete-registration settings.
+
+Tutorial 2.1 demonstrates the core PRISM workflow, including data loading and preprocessing, simulation of incomplete registration, construction of modality-availability masks and spatial graphs, PRISM training, spatial-domain identification, and missing-modality imputation.
+
+**Expected outputs:** integrated PRISM representations, spatial-domain assignments, reconstructed or imputed molecular profiles, and quantitative evaluation results for the held-out target modality.
+
+**Typical runtime:** approximately 5 minutes using the reference NVIDIA A100 80 GB GPU environment.
 
 ## Tutorials
 
