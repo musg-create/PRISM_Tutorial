@@ -53,13 +53,15 @@ pip install -e . --no-deps
 
 Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Links to the original public data sources are provided in the corresponding tutorials and dataset documentation.
 
-## Quick start
+## Quick-start demo
 
 For a quick evaluation of PRISM, we recommend starting with **[Tutorial 2.1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>)**.
 
-The tutorial uses the publicly available human lymph node S1 dataset. A direct link to the required data is provided in the notebook and dataset documentation. No additional demo dataset needs to be downloaded from this repository. The same S1 dataset can also be used with **[Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>)** and **[Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>)** to evaluate PRISM under additional incomplete-registration settings.
+The tutorial uses section S1 of the human lymph node RNA-ADT dataset from the publicly available [SpaMosaic Zenodo repository](https://doi.org/10.5281/zenodo.12654113). Download `data_integration.zip` from the Zenodo record. After extraction, the files required for Tutorial 2.1 are located under `human lymphoid organs/lymph/S1/`, including `adata_RNA.h5ad` and `adata_ADT.h5ad`.
 
-Tutorial 2.1 demonstrates the core PRISM workflow, including data loading and preprocessing, simulation of incomplete registration, construction of modality-availability masks and spatial graphs, PRISM training, spatial-domain identification, and missing-modality imputation.
+The same S1 dataset can also be used with **[Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>)** and **[Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>)** to evaluate PRISM under additional incomplete-registration settings.
+
+Tutorial 2.1 demonstrates the core PRISM workflow, including data loading and preprocessing, simulation of FOV-induced incomplete registration, construction of modality-availability masks and spatial graphs, PRISM training, spatial-domain identification, and missing-modality imputation.
 
 **Expected outputs:** integrated PRISM representations, spatial-domain assignments, reconstructed or imputed molecular profiles, and quantitative evaluation results for the held-out target modality.
 
