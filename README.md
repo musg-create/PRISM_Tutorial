@@ -63,9 +63,7 @@ For a quick evaluation of PRISM, we recommend starting with **Tutorial 2.1: Simu
 
 ## Using PRISM on new data
 
-For a new spatial multi-omics dataset with real incomplete registration, the modalities should first be mapped to a common spatial coordinate system using an appropriate registration workflow. PRISM inputs should then be organized as modality-specific AnnData objects over the same ordered set of spatial locations, with coordinates stored in `adata.obsm["spatial"]` and modality availability defined according to the registration results. Modality-specific quality control and feature filtering can be performed on observed profiles while retaining all spatial locations and their ordering, including unregistered locations.
-
-The prepared data can then be analyzed with PRISM for spatial domain identification and missing-modality imputation. **Tutorials 5-7** provide reference workflows for resolution-induced and adjacent-section incomplete registration, including spatial registration, PRISM input preparation, model training, and downstream analysis.
+For new spatial multi-omics datasets with real incomplete registration, **Tutorials 5-7** provide reference workflows covering resolution-induced and adjacent-section incomplete-registration scenarios. These tutorials illustrate how to perform spatial registration, identify registered and unregistered locations, organize modality-specific AnnData inputs and spatial coordinates, define modality availability, perform modality-specific preprocessing, train PRISM, and conduct downstream spatial domain identification and missing-modality imputation.
 
 ## Tutorials
 
