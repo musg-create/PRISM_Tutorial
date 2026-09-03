@@ -75,7 +75,7 @@ Start with Tutorial 1 for the complete simulated source-to-target workflow, then
 | [6.1](<Tutorial6_1: scSLAT Registration of P22 Mouse Brain Adjacent RNA and ATAC Sections.ipynb>) and [6.2](<Tutorial6_2: Application of PRISM to P22 Mouse Brain Adjacent RNA and CUT&Tag Sections.ipynb>) | scSLAT registration and real incomplete registration in adjacent P22 mouse-brain H3K27ac (spatial CUT&Tag) and RNA sections. |
 | [7.1](<Tutorial7_1: scSLAT Registration of COAD RNA and CODEX Data.ipynb>), [7.2](<Tutorial7_2: Application of PRISM to COAD Adjacent RNA and CODEX Sections.ipynb>) and [7.3](<Tutorial7_3: Simulation of Cell-Type-Specific Incomplete Registration in COAD.ipynb>) | scSLAT registration, real incomplete registration and cell-type-specific simulation in COAD RNA and CODEX data. |
 
-Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their subsequent analysis tutorials. The remaining tutorials can be run independently once their documented inputs are available. **For new spatial multi-omics datasets with real incomplete registration, Tutorials 5-7 can serve as reference workflows for adapting PRISM to resolution-induced or adjacent-section settings, including spatial registration, input preparation, model training, spatial domain identification, and missing-modality imputation.**
+Tutorials 5.1, 6.1 and 7.1 prepare registered intermediate objects used by their subsequent analysis tutorials. The remaining tutorials can be run independently once their documented inputs are available. **If users wish to apply PRISM to a new spatial multi-omics dataset with incomplete registration, we recommend referring to Tutorials 5-7 for representative workflows.**
 
 ## External prerequisites and scope
 
