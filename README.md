@@ -53,17 +53,11 @@ pip install -e . --no-deps
 
 Third-party molecular data, processed AnnData objects and generated result files are not redistributed in this repository. Links to the original public data sources are provided in the corresponding tutorials and dataset documentation.
 
-## Quick-start demo
+## Quick-start
 
-For a quick evaluation of PRISM, we recommend starting with **[Tutorial 2.1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node](<Tutorial2_1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node.ipynb>)**.
+For a quick evaluation of PRISM, we recommend starting with **Tutorial 2.1: Simulation of FOV-Induced Incomplete Registration in Human Lymph Node**. The tutorial uses **section S1 of the human lymph node RNA-ADT dataset** from a [**publicly available repository**](https://doi.org/10.5281/zenodo.12654113), which provides a processed AnnData version for direct use with **Tutorial 2.1**, including `adata_RNA.h5ad` and `adata_ADT.h5ad`. The same S1 dataset can also be used with **Tutorial 2.2** and **Tutorial 2.3** to evaluate PRISM under random and asymmetric incomplete-registration settings, respectively.
 
-The tutorial uses section S1 of the human lymph node RNA-ADT dataset from the publicly available [SpaMosaic Zenodo repository](https://doi.org/10.5281/zenodo.12654113). Download `data_integration.zip` from the Zenodo record. After extraction, the files required for Tutorial 2.1 are located under `human lymphoid organs/lymph/S1/`, including `adata_RNA.h5ad` and `adata_ADT.h5ad`.
-
-The same S1 dataset can also be used with **[Tutorial 2.2](<Tutorial2_2: Simulation of Random Incomplete Registration in Human Lymph Node.ipynb>)** and **[Tutorial 2.3](<Tutorial2_3: Simulation of Asymmetric Incomplete Registration in Human Lymph Node.ipynb>)** to evaluate PRISM under additional incomplete-registration settings.
-
-Tutorial 2.1 demonstrates the core PRISM workflow, including data loading and preprocessing, simulation of FOV-induced incomplete registration, construction of modality-availability masks and spatial graphs, PRISM training, spatial-domain identification, and missing-modality imputation.
-
-**Expected outputs:** integrated PRISM representations, spatial-domain assignments, reconstructed or imputed molecular profiles, and quantitative evaluation results for the held-out target modality.
+**Expected outputs:** integrated semantic representations, spatial-domain assignments, reconstructed or imputed molecular profiles, and quantitative evaluation results at held-out locations.
 
 **Typical runtime:** approximately 5 minutes using the reference NVIDIA A100 80 GB GPU environment.
 
