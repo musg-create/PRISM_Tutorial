@@ -1829,6 +1829,45 @@ def _normalize_true_pred_separately_01_by_feature(
         true_01 = np.clip(true_01, 0.0, 1.0)
         pred_01 = np.clip(pred_01, 0.0, 1.0)
     return true_01.astype(np.float32), pred_01.astype(np.float32)
+
+
+def _fit_featurewise_minmax(matrix, fit_indices, *, eps=1e-8):
+    """Fit a per-feature min-max transform using only the supplied rows."""
+    matrix = np.asarray(matrix, dtype=np.float32)
+    fit_indices = np.asarray(fit_indices, dtype=int)
+    if matrix.ndim != 2:
+        raise ValueError("matrix must be two-dimensional.")
+    if fit_indices.size == 0:
+        raise ValueError("fit_indices is empty.")
+    if np.any(fit_indices < 0) or np.any(fit_indices >= matrix.shape[0]):
+        raise IndexError("fit_indices contains an out-of-range row index.")
+    fit_matrix = matrix[fit_indices, :]
+    feature_min = np.zeros(matrix.shape[1], dtype=np.float32)
+    feature_range = np.ones(matrix.shape[1], dtype=np.float32)
+    for feature_idx in range(matrix.shape[1]):
+        values = fit_matrix[:, feature_idx]
+        values = values[np.isfinite(values)]
+        if values.size == 0:
+            continue
+        feature_min[feature_idx] = float(np.min(values))
+        value_range = float(np.max(values) - feature_min[feature_idx])
+        if np.isfinite(value_range) and value_range > eps:
+            feature_range[feature_idx] = value_range
+    return feature_min, feature_range
+
+
+def _apply_featurewise_minmax(matrix, feature_min, feature_range):
+    """Apply a previously fitted per-feature min-max transform without clipping."""
+    matrix = np.asarray(matrix, dtype=np.float32)
+    feature_min = np.asarray(feature_min, dtype=np.float32)
+    feature_range = np.asarray(feature_range, dtype=np.float32)
+    if matrix.ndim != 2 or matrix.shape[1] != feature_min.size:
+        raise ValueError("matrix feature count must match the fitted scale.")
+    if feature_range.shape != feature_min.shape or np.any(feature_range <= 0):
+        raise ValueError("feature_range must be positive and match feature_min.")
+    return ((matrix - feature_min[None, :]) / feature_range[None, :]).astype(np.float32)
+
+
 # ==========================================================
 # HVG / Top-K utilities
 # ==========================================================
@@ -2024,7 +2063,9 @@ def _topk_feature_view(
         "k": k,
         "rank_by": rank_by,
     }
-def _save_feature_metric_summary(save_path, eval_prefix, tag, metrics_dict, var_names):
+def _save_feature_metric_summary(
+    save_path, eval_prefix, tag, metrics_dict, var_names, *, mse_scale="separate"
+):
     """
     Save per-feature metrics.
     Metric values are rounded to 4 decimal places.
@@ -2035,7 +2076,8 @@ def _save_feature_metric_summary(save_path, eval_prefix, tag, metrics_dict, var_
     for m in ["PCC", "SPCC", "MSE", "CMD", "SSIM"]:
         if m in metrics_dict["per_protein"]:
             vals = np.asarray(metrics_dict["per_protein"][m], dtype=np.float32)
-            data[m] = np.round(vals, 4)
+            column_name = f"MSE_{mse_scale}" if m == "MSE" else m
+            data[column_name] = np.round(vals, 4)
     out_csv = os.path.join(save_path, f"{eval_prefix}_{tag}_feature_metrics.csv")
     pd.DataFrame(data).to_csv(out_csv, index=False)
     return out_csv
@@ -2655,6 +2697,7 @@ def prism_eval_and_save(
     prediction_key: Optional[str] = None,
     save_files: bool = False,
     compute_structure_metrics: bool = False,
+    mse_scale: str = "common",
     normalize_raw_for_metrics: bool = True,
     raw_eval_clip: bool = True,
     raw_layer_key: str = "raw_data",
@@ -2674,7 +2717,15 @@ def prism_eval_and_save(
     returned as ``results['imputed_adata']`` for plotting in the same notebook.
     Setting ``save_files=True`` writes the complete ``.h5ad`` plus raw-scale
     CSV and metric tables; ``False`` keeps this workflow entirely in memory.
+
+    By default, ``mse_scale='common'`` computes MSE after applying one
+    per-feature min-max transform fitted on observed ground-truth rows to both
+    truth and prediction, without clipping. Passing ``mse_scale='separate'``
+    preserves the legacy MSE calculation on separately normalized evaluation
+    arrays. PCC, SPCC, CMD, and SSIM retain their existing evaluation path.
     """
+    if mse_scale not in ("separate", "common"):
+        raise ValueError("mse_scale must be 'separate' or 'common'.")
     eval_prefix = first_name if output_suffix is None else f"{first_name}_{output_suffix}"
     output_dir = Path(save_path)
     if save_files:
@@ -2723,6 +2774,40 @@ def prism_eval_and_save(
         np.arange(len(missing_indices), dtype=int),
         compute_structure_metrics=compute_structure_metrics,
     )
+    mse_scale_parameters = None
+    if mse_scale == "common":
+        observed_indices = np.setdiff1d(
+            np.arange(truth_raw.shape[0], dtype=int),
+            missing_indices,
+            assume_unique=False,
+        )
+        feature_min, feature_range = _fit_featurewise_minmax(
+            truth_raw,
+            observed_indices,
+        )
+        common_true = _apply_featurewise_minmax(
+            raw_true_metric,
+            feature_min,
+            feature_range,
+        )
+        common_pred = _apply_featurewise_minmax(
+            raw_pred_metric,
+            feature_min,
+            feature_range,
+        )
+        common_metrics = evaluate_protein_prediction(
+            common_true,
+            common_pred,
+            np.arange(len(missing_indices), dtype=int),
+        )
+        metrics_raw["per_protein"]["MSE"] = common_metrics["per_protein"]["MSE"]
+        metrics_raw["overall"]["MSE"] = common_metrics["overall"]["MSE"]
+        mse_scale_parameters = {
+            "feature_names": model_features.to_numpy(dtype=str),
+            "feature_min": feature_min.copy(),
+            "feature_range": feature_range.copy(),
+            "n_fit_observations": int(observed_indices.size),
+        }
     results = {
         "raw": metrics_raw,
         "saved": {},
@@ -2730,6 +2815,15 @@ def prism_eval_and_save(
         "prediction_source": "in-memory raw-scale AnnData",
         "eval_prefix": eval_prefix,
         "metric_logic": "feature-wise across missing cells, then averaged across features",
+        "mse_scale": mse_scale,
+        "mse_scale_description": (
+            "common per-feature min-max scale fitted on observed ground-truth rows; "
+            "applied to truth and prediction without clipping"
+            if mse_scale == "common"
+            else "legacy evaluation scale controlled by normalize_raw_for_metrics"
+        ),
+        "mse_scale_parameters": mse_scale_parameters,
+        "correlation_metric_logic": "unchanged legacy evaluation path",
     }
     if topk_features is not None and int(topk_features) > 0:
         k = min(int(topk_features), imputed_adata.n_vars)
@@ -2759,7 +2853,12 @@ def prism_eval_and_save(
         results["saved"]["raw_true_missing"] = str(raw_true_path)
         results["saved"]["raw_pred_missing"] = str(raw_pred_path)
         metric_path = _save_feature_metric_summary(
-            str(output_dir), eval_prefix, "raw", metrics_raw, model_features
+            str(output_dir),
+            eval_prefix,
+            "raw",
+            metrics_raw,
+            model_features,
+            mse_scale=mse_scale,
         )
         results["saved"]["raw_feature_metrics"] = metric_path
         if save_topk_summary and "raw_topk" in results:
@@ -2770,7 +2869,10 @@ def prism_eval_and_save(
             }
             for metric_name in ("PCC", "SPCC", "MSE", "CMD", "SSIM"):
                 if metric_name in metrics_raw["per_protein"]:
-                    data[metric_name] = np.round(
+                    column_name = (
+                        f"MSE_{mse_scale}" if metric_name == "MSE" else metric_name
+                    )
+                    data[column_name] = np.round(
                         np.asarray(metrics_raw["per_protein"][metric_name], dtype=np.float32)[idx], 4
                     )
             topk_path = output_dir / (
