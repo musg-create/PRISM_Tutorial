@@ -852,6 +852,8 @@ def evaluate_protein_prediction(
         PCC, SPCC, MSE
     Optional metric:
         CMD, controlled by compute_structure_metrics=True.
+    SPCC is NaN when either vector is constant or fewer than two finite pairs
+    remain; undefined values are excluded from the overall mean.
     """
     if protein_true.shape != protein_pred.shape:
         raise ValueError(f"Dimension mismatch: True {protein_true.shape}, Pred {protein_pred.shape}")
@@ -880,8 +882,8 @@ def evaluate_protein_prediction(
                 pcc, _ = pearsonr(yt, yp)
                 per_feature["PCC"].append(float(pcc))
         if "SPCC" in per_feature:
-            if np.std(yt) == 0 or np.std(yp) == 0:
-                per_feature["SPCC"].append(0.0)
+            if yt.size < 2 or np.ptp(yt) == 0 or np.ptp(yp) == 0:
+                per_feature["SPCC"].append(np.nan)
             else:
                 spcc, _ = spearmanr(yt, yp)
                 per_feature["SPCC"].append(float(spcc))
