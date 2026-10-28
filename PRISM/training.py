@@ -15,11 +15,15 @@ from .core import (
     rewire_spatial_net,
 )
 from .prior import prepare_similarity_subset, validate_modality_context_prior
+
+
 def get_hv_mask(adata):
     """Return highly-variable feature mask if available; otherwise use all features."""
     if "highly_variable" in adata.var.columns:
         return np.asarray(adata.var["highly_variable"].values, dtype=bool)
     return np.ones(adata.n_vars, dtype=bool)
+
+
 def prepare_target_mask(
     adata_target,
     target_shape,
@@ -35,7 +39,9 @@ def prepare_target_mask(
         protein_mask / adt_mask / rna_mask / atac_mask / metabolomics_mask
     """
     if fallback_mask_keys is None:
-        fallback_mask_keys = ["target_mask", "protein_mask", "adt_mask", "rna_mask", "atac_mask", "metabolomics_mask"]
+        fallback_mask_keys = [
+            "target_mask", "protein_mask", "adt_mask", "rna_mask", "atac_mask", "metabolomics_mask"
+        ]
     candidate_keys = []
     if mask_key is not None:
         candidate_keys.append(mask_key)
@@ -64,6 +70,8 @@ def prepare_target_mask(
     if not np.all((mask == 0) | (mask == 1)):
         raise ValueError(f"{selected_key} must contain binary row-mask values.")
     return torch.as_tensor(mask.astype(bool), device=device, dtype=torch.bool)
+
+
 def train_PRISM(adata_source, adata_target, distance_matrix, k_top=5, hidden_dims=None, n_epochs=1000, lr=0.001,
                 gradient_clipping=5.0, weight_decay=0.0001, verbose=True, random_seed=2024,
                 save_loss=True, save_reconstruction=False, output_dir="Default", file_prefix="Default",
@@ -153,13 +161,10 @@ def train_PRISM(adata_source, adata_target, distance_matrix, k_top=5, hidden_dim
     if load_model_path is None:
         w_params = torch.nn.Parameter(torch.ones(4, device=device))
         optimizer = torch.optim.Adam(
-            [{"params": model.parameters()}, {"params": [w_params], "lr": lr * 0.1}],
+            [{"params": model.parameters()}, {"params": [w_params], "lr": lr}],
             lr=lr,
             weight_decay=weight_decay,
         )
-        # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        #     optimizer, mode="min", factor=0.5, patience=20, verbose=verbose
-        # )
         scheduler_kwargs = dict(
             mode="min",
             factor=0.5,
@@ -232,7 +237,7 @@ def train_PRISM(adata_source, adata_target, distance_matrix, k_top=5, hidden_dim
     del mask_target, target_labels, true_missing_mask, observed_cell_mask
     if torch.device(device).type == "cuda":
         torch.cuda.empty_cache()
-    # 10. Deterministic inference: all center ADT tokens are masked.
+    # 9. Deterministic inference: all center ADT tokens are masked.
     model.load_state_dict(best_model_state, strict=True)
     model.eval()
     with torch.no_grad():
@@ -275,6 +280,8 @@ def train_PRISM(adata_source, adata_target, distance_matrix, k_top=5, hidden_dim
         else:
             print(f"PRISM inference complete: {file_prefix}")
     return adata_source, adata_target
+
+
 def _save_single_results(adata_src, adata_tgt, p_emb, s_pre, t_pre, loss, save_loss, save_recon,
                   output_dir, file_prefix, target_var_names, save_files=True,
                   base_emb_np=None, base_emb_preassigned=False):
@@ -324,6 +331,8 @@ def _save_single_results(adata_src, adata_tgt, p_emb, s_pre, t_pre, loss, save_l
             adata_tgt.layers["PRISM_tgt_pred"] = tgt_pred_np.clip(min=0)
         else:
             adata_tgt.obsm["PRISM_tgt_pred"] = tgt_pred_np
+
+
 def build_feature_mask(adata_full, adata_used, self_missing_np, device, mask_key=None, fallback_mask_keys=None):
     """
     Build a row-level mask aligned with adata_used.
@@ -337,7 +346,9 @@ def build_feature_mask(adata_full, adata_used, self_missing_np, device, mask_key
     """
     n_obs = adata_used.n_obs
     if fallback_mask_keys is None:
-        fallback_mask_keys = ["source_mask", "target_mask", "rna_mask", "protein_mask", "adt_mask", "atac_mask", "metabolomics_mask"]
+        fallback_mask_keys = [
+            "source_mask", "target_mask", "rna_mask", "protein_mask", "adt_mask", "atac_mask", "metabolomics_mask"
+        ]
     candidate_keys = []
     if mask_key is not None:
         candidate_keys.append(mask_key)
@@ -366,6 +377,8 @@ def build_feature_mask(adata_full, adata_used, self_missing_np, device, mask_key
     else:
         # Safe fallback for modality-level missingness.
         return torch.as_tensor(~self_missing_np, device=device, dtype=torch.bool)
+
+
 def masked_mse_loss(pred, target, mask):
     """Masked MSE loss for whole-row modality missingness."""
     if mask.ndim != 1:
@@ -373,6 +386,8 @@ def masked_mse_loss(pred, target, mask):
     denom = (mask.sum() * pred.size(1)).to(dtype=pred.dtype).clamp_min(1.0)
     mask = mask.unsqueeze(1)
     return (F.mse_loss(pred, target, reduction="none") * mask).sum() / denom
+
+
 def train_PRISM_DM(adata_source, adata_target, context_prior, k_top=5, hidden_dims=None, n_epochs=1000, lr=0.001,
                    gradient_clipping=5.0, weight_decay=0.0001, verbose=True, random_seed=2024,
                    save_loss=True, save_reconstruction=False, output_dir="Default", file_prefix="Default",
@@ -430,17 +445,41 @@ def train_PRISM_DM(adata_source, adata_target, context_prior, k_top=5, hidden_di
     if sp.issparse(adata_target.X):
         adata_target.X.eliminate_zeros()
     # 4. Select highly-variable features if available
-    adata_src_vars = adata_source[:, adata_source.var["highly_variable"]].copy() if "highly_variable" in adata_source.var.columns else adata_source.copy()
-    adata_tgt_vars = adata_target[:, adata_target.var["highly_variable"]].copy() if "highly_variable" in adata_target.var.columns else adata_target.copy()
+    adata_src_vars = (
+        adata_source[:, adata_source.var["highly_variable"]].copy()
+        if "highly_variable" in adata_source.var.columns
+        else adata_source.copy()
+    )
+    adata_tgt_vars = (
+        adata_target[:, adata_target.var["highly_variable"]].copy()
+        if "highly_variable" in adata_target.var.columns
+        else adata_target.copy()
+    )
     source_data = Transfer_pytorch_Data(adata_src_vars)
     target_data = Transfer_pytorch_Data(adata_tgt_vars)
     source_data = source_data.to(device)
     target_data = target_data.to(device)
     # 5. Build loss masks aligned with selected features
-    mask_source = build_feature_mask(adata_source, adata_src_vars, src_missing_np, device, source_mask_key,
-                                     fallback_mask_keys=["source_mask", "rna_mask", "adt_mask", "protein_mask", "atac_mask", "metabolomics_mask"],)
-    mask_target = build_feature_mask(adata_target, adata_tgt_vars, tgt_missing_np, device, target_mask_key,
-                                     fallback_mask_keys=["target_mask", "rna_mask", "adt_mask", "protein_mask", "atac_mask", "metabolomics_mask"],)
+    mask_source = build_feature_mask(
+        adata_source,
+        adata_src_vars,
+        src_missing_np,
+        device,
+        source_mask_key,
+        fallback_mask_keys=[
+            "source_mask", "rna_mask", "adt_mask", "protein_mask", "atac_mask", "metabolomics_mask"
+        ],
+    )
+    mask_target = build_feature_mask(
+        adata_target,
+        adata_tgt_vars,
+        tgt_missing_np,
+        device,
+        target_mask_key,
+        fallback_mask_keys=[
+            "target_mask", "rna_mask", "adt_mask", "protein_mask", "atac_mask", "metabolomics_mask"
+        ],
+    )
     n_cells = source_data.x.size(0)
     src_true_missing_mask = src_self_missing
     tgt_true_missing_mask = tgt_self_missing
@@ -455,13 +494,10 @@ def train_PRISM_DM(adata_source, adata_target, context_prior, k_top=5, hidden_di
     if load_model_path is None:
         w_params = torch.nn.Parameter(torch.ones(4, device=device))
         optimizer = torch.optim.Adam(
-            [{"params": model.parameters()}, {"params": [w_params], "lr": lr * 0.1}],
+            [{"params": model.parameters()}, {"params": [w_params], "lr": lr}],
             lr=lr,
             weight_decay=weight_decay,
         )
-        # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        #     optimizer, mode="min", factor=0.5, patience=20, verbose=verbose
-        # )
         scheduler_kwargs = dict(
             mode="min",
             factor=0.5,
@@ -582,6 +618,7 @@ def train_PRISM_DM(adata_source, adata_target, context_prior, k_top=5, hidden_di
         save_files=save_result_files and load_model_path is None,
         base_emb_np=base_emb_np,
         base_emb_preassigned=True,
+        verbose=verbose,
     )
     if verbose:
         if load_model_path is None:
@@ -590,9 +627,11 @@ def train_PRISM_DM(adata_source, adata_target, context_prior, k_top=5, hidden_di
             print(f"Finished pretrained deterministic inference: {file_prefix}")
             print(f"Loaded model: {load_model_path}")
     return adata_source, adata_target
+
+
 def _save_dual_results(adata_src, adata_tgt, src_var_names, tgt_var_names, p_emb, s_pre, t_pre,
                  loss, save_loss, save_recon, output_dir, file_prefix, save_files=True,
-                 base_emb_np=None, base_emb_preassigned=False):
+                 base_emb_np=None, base_emb_preassigned=False, verbose=False):
     """Save embedding and source / target predictions."""
     if base_emb_np is None:
         base_emb_np = p_emb.detach().cpu().numpy()
@@ -633,9 +672,9 @@ def _save_dual_results(adata_src, adata_tgt, src_var_names, tgt_var_names, p_emb
         ).to_csv(embed_csv)
         if verbose:
             print(f"Results for '{file_prefix}' saved:")
-            print(f"  source prediction: {source_csv}")
-            print(f"  target prediction: {target_csv}")
-            print(f"  embedding:          {embed_csv}")
+            print(f"source prediction: {source_csv}")
+            print(f"target prediction: {target_csv}")
+            print(f"embedding:          {embed_csv}")
     if save_loss:
         adata_src.uns["PRISM_loss"] = float(loss)
         adata_tgt.uns["PRISM_loss"] = float(loss)
